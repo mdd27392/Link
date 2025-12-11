@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Link</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Link is a tiny association mini app where you store just two words per day, linked together. Build a simple chain of word-to-word connections over time.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Link">
+  <meta property="og:description" content="Link is a tiny association mini app where you store just two words per day, linked together. Build a simple chain of word-to-word connections over time.">
+  <meta property="og:image" content="https://link-mini.vercel.app/assets/hero.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://link-mini.vercel.app/">
+
+  <!-- Farcaster Mini App meta -->
+  <meta
+    name="fc:miniapp"
+    content='{"version":"1","name":"Link","iconUrl":"https://link-mini.vercel.app/assets/icon.png","imageUrl":"https://link-mini.vercel.app/assets/embed-3x2.png","button":{"title":"Open Link","action":{"type":"launch_frame","url":"https://link-mini.vercel.app/"}},"splashImageUrl":"https://link-mini.vercel.app/assets/splash.png","splashBackgroundColor":"#020617"}'
+  >
+
+  <!-- Farcaster Frame meta -->
+  <meta
+    property="fc:frame"
+    content='{"version":"vNext","imageUrl":"https://link-mini.vercel.app/assets/embed-3x2.png","button":{"title":"Open Link","action":{"type":"launch_frame","url":"https://link-mini.vercel.app/"}},"splashImageUrl":"https://link-mini.vercel.app/assets/splash.png","splashBackgroundColor":"#020617"}'
+  >
+
+  <meta name="theme-color" content="#020617">
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #020617;
+      --fg: #e5e7eb;
+      --muted: #6b7280;
+      --accent: #a855f7;
+      --accent-soft: rgba(129, 140, 248, 0.12);
+      --card: #020617;
+      --border: rgba(148, 163, 184, 0.35);
+      --chip-bg: rgba(15, 23, 42, 0.96);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #020617, #020617);
+      color: var(--fg);
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      margin-inline: auto;
+      padding: 18px 14px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 14px 12px 14px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(17, 24, 39, 0.98));
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(148, 163, 184, 0.98);
+    }
+
+    .card-day {
+      font-size: 0.78rem;
+      color: rgba(209, 213, 219, 0.96);
+    }
+
+    .inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: rgba(148, 163, 184, 0.96);
+    }
+
+    .field-shell {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field-shell span {
+      font-size: 0.8rem;
+      color: rgba(148, 163, 184, 0.96);
+    }
+
+    input[type="text"] {
+      border: none;
+      outline: none;
+      flex: 1;
+      background: transparent;
+      color: var(--fg);
+      font-size: 0.88rem;
+      padding: 2px 0;
+    }
+
+    input::placeholder {
+      color: rgba(148, 163, 184, 0.7);
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .today-link {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .word-chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      font-size: 0.82rem;
+    }
+
+    .arrow {
+      font-size: 0.8rem;
+      color: rgba(148, 163, 184, 0.96);
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 7px 14px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+      color: rgba(248, 250, 252, 0.98);
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease-out, border-color 0.12s ease-out, transform 0.06s ease-out;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      border-color: rgba(129, 140, 248, 0.9);
+      background: linear-gradient(135deg, rgba(129, 140, 248, 0.16), rgba(37, 99, 235, 0.08));
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .status-text {
+      font-size: 0.75rem;
+      color: rgba(148, 163, 184, 0.96);
+      margin-top: 2px;
+    }
+
+    .history-card {
+      border-radius: 18px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 10px 10px 8px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(17, 24, 39, 0.98));
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.76rem;
+      color: rgba(148, 163, 184, 0.98);
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 160px;
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.6);
+      border-radius: 999px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+
+    .history-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(129, 140, 248, 0.9);
+    }
+
+    .history-date {
+      color: rgba(148, 163, 184, 0.96);
+      min-width: 80px;
+    }
+
+    .history-link {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .history-link .word {
+      font-size: 0.82rem;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .history-link .arrow {
+      font-size: 0.75rem;
+      color: rgba(148, 163, 184, 0.96);
+    }
+
+    .environment-row {
+      font-size: 0.74rem;
+      color: rgba(148, 163, 184, 0.96);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .environment-row span.highlight { color: #a5b4fc; }
+
+    footer {
+      margin-top: 4px;
+      font-size: 0.7rem;
+      color: rgba(100, 116, 139, 0.95);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(148, 163, 184, 0.7); }
+
+    @media (min-height: 780px) {
+      .card { padding-block: 16px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title-row">
+        <div>
+          <div class="app-title">Link</div>
+          <div class="subtitle">Pair two words daily.</div>
+        </div>
+        <div class="badge">Word Chain</div>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="card-header">
+          <span class="card-title">Today&apos;s link</span>
+          <span class="card-day" id="link-day"></span>
+        </div>
+
+        <div class="inputs">
+          <label>
+            From
+            <div class="field-shell">
+              <span>A</span>
+              <input type="text" id="from-input" autocomplete="off" placeholder="start">
+            </div>
+          </label>
+          <label>
+            To
+            <div class="field-shell">
+              <span>B</span>
+              <input type="text" id="to-input" autocomplete="off" placeholder="landing">
+            </div>
+          </label>
+        </div>
+
+        <div class="link-row">
+          <div class="today-link" id="today-link">
+            <span class="word-chip" id="today-from">—</span>
+            <span class="arrow">↔</span>
+            <span class="word-chip" id="today-to">—</span>
+          </div>
+          <button class="btn btn-primary" id="btn-save">Save</button>
+        </div>
+
+        <div class="status-text" id="status-text">No link saved for today yet.</div>
+
+        <div class="history-card">
+          <div class="history-header">
+            <span>Recent links</span>
+            <span class="history-label">Last few days</span>
+          </div>
+          <div class="history-list" id="history-list">
+            <!-- history items injected -->
+          </div>
+        </div>
+
+        <div class="environment-row">
+          <span id="environment-indicator">Detecting environment…</span>
+          <span class="highlight" id="link-state">Unsaved</span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Words stay on this device.</span>
+      <span class="dot"></span>
+    </footer>
+  </div>
+
+  <script type="module" src="./script.js"></script>
+</body>
+</html>
