@@ -1,0 +1,31 @@
+{
+  "accountAssociation": {
+    "header": "TODO_REPLACE_BASE64_HEADER",
+    "payload": "TODO_REPLACE_BASE64_PAYLOAD",
+    "signature": "TODO_REPLACE_BASE64_SIGNATURE"
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "Link",
+    "homeUrl": "https://link-mini.vercel.app/",
+    "iconUrl": "https://link-mini.vercel.app/assets/icon.png",
+    "splashImageUrl": "https://link-mini.vercel.app/assets/splash.png",
+    "splashBackgroundColor": "#020617",
+    "subtitle": "Pair two words daily",
+    "description": "Link is a tiny association mini app where you store just two words per day, linked together. Build a simple chain of word-to-word connections over time.",
+    "primaryCategory": "productivity",
+    "tags": [
+      "fun",
+      "simple",
+      "utility"
+    ],
+    "heroImageUrl": "https://link-mini.vercel.app/assets/hero.png",
+    "ogTitle": "Link",
+    "ogDescription": "Link is a tiny association mini app where you store just two words per day, linked together. Build a simple chain of word-to-word connections over time.",
+    "ogImageUrl": "https://link-mini.vercel.app/assets/hero.png",
+    "screenshotUrls": [
+      "https://link-mini.vercel.app/assets/hero.png"
+    ],
+    "noindex": true
+  }
+}
